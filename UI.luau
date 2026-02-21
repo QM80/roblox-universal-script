@@ -573,6 +573,8 @@ ambience:AddToggle({
 
 -- Ambience end
 
+fg.Parent = Lighting
+
 local fog = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere", Lighting)
 
 local fog_density = 0
