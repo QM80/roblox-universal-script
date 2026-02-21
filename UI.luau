@@ -1,7 +1,7 @@
 local Fatality = loadstring(game:HttpGet("https://raw.githubusercontent.com/QM80/Fatality-purple/refs/heads/main/src/source.luau"))();
 
 Fatality:Loader({
-    Name = "UNIVERSAL HUB",
+    Name = "FATALITY",
     Duration = 1
 });
 
@@ -138,12 +138,12 @@ local function initESP()
                     if success and cframe and size then
                         local points, visible = getBoxScreenPoints(cframe, size)
                         if not visible then
-                            if ESPObjects[player] then
-                                hideAll(ESPObjects[player])
+                            if ESPObjects[player.Name] then
+                                hideAll(ESPObjects[player.Name])
                             end
                         else
-                            local data = ESPObjects[player] or createESPElements()
-                            ESPObjects[player] = data
+                            local data = ESPObjects[player.Name] or createESPElements()
+                            ESPObjects[player.Name] = data
 
                             local minX, minY, maxX, maxY = math.huge, math.huge, -math.huge, -math.huge
                             for _, pt in ipairs(points) do
@@ -327,20 +327,26 @@ local function initESP()
                         end
                     end
                 else
-                    if ESPObjects[player] then
-                        hideAll(ESPObjects[player])
+                    if ESPObjects[player.Name] then
+                        hideAll(ESPObjects[player.Name])
                     end
                 end
             end
         end
     end)
 
-    Players.PlayerRemoving:Connect(function(player)
-        if ESPObjects[player] then
-            for _, obj in pairs(ESPObjects[player]) do
-                obj:Remove()
+        Players.PlayerRemoving:Connect(function(player)
+        if ESPObjects[player.Name] then
+            for _, obj in pairs(ESPObjects[player.Name]) do
+                if typeof(obj) == "table" then
+                    for _, line in pairs(obj) do
+                        line:Remove()
+                    end
+                else
+                    obj:Remove()
+                end
             end
-            ESPObjects[player] = nil
+            ESPObjects[player.Name] = nil
         end
     end)
 end
@@ -566,8 +572,6 @@ ambience:AddToggle({
 })
 
 -- Ambience end
-
-fg.Parent = Lighting
 
 local fog = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere", Lighting)
 
